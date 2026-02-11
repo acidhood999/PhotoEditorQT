@@ -20,7 +20,7 @@ PhotoEditorQT::PhotoEditorQT(QWidget *parent) : QMainWindow(parent)
 
 
 	setCentralWidget(container);
-	WindowSett();
+	WindowSet();
 	Bar* bar = new Bar(this);
 }
 
