@@ -9,7 +9,7 @@ class ImageItem : public QWidget
 public:
 
 	ImageItem(QWidget* parent = nullptr);
-
+	void setData(const QPixmap& pixmap);
 	~ImageItem();
 
 private slots:
@@ -19,7 +19,6 @@ private slots:
 private:
 	QLabel* img;
 	QLabel* title;
-	QLabel* info;
 	QGridLayout* layout;
 
 };

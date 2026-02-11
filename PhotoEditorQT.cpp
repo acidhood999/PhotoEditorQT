@@ -38,10 +38,15 @@ void PhotoEditorQT::setImage(QString& filename)
 	list = new QFileInfoList(dir->entryInfoList(filter));
 	for (int i = 0; i < list->count(); i++)
 	{
+		QFileInfo f = list->at(i);
 		item = new QListWidgetItem(listImg);
 		ImageItem* imgItem = new ImageItem;
+		QPixmap pixmax(f.filePath());
+		imgItem->setData(pixmax.scaledToWidth(100,Qt::SmoothTransformation));
 		item->setSizeHint(imgItem->sizeHint());
 		listImg->setItemWidget(item, imgItem);
+
+
 
 	}
 }

@@ -3,15 +3,16 @@
 ImageItem::ImageItem(QWidget* parent)
 {
 	img = new QLabel(this);
-	title = new QLabel(this);
-	info = new QLabel(this);
 	layout = new QGridLayout(this);
-	img->setText("pix");
-	title->setText("title");
-	info->setText("info");
+	img->setAlignment(Qt::AlignCenter);
 	layout->addWidget(img, 0, 0);
-	layout->addWidget(title, 0, 1);
-	layout->addWidget(info, 1, 1);
+}
+
+void ImageItem::setData(const QPixmap& pixmap)
+{
+	img->setPixmap(pixmap);
+	img->setFixedWidth(pixmap.width());
+
 }
 
 ImageItem::~ImageItem()

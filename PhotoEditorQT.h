@@ -40,7 +40,7 @@ private:
 	QDir* dir;
 	QFileInfoList* list;
 	QListWidgetItem* item;
-
+	
 
 	void WindowSet();
 };
