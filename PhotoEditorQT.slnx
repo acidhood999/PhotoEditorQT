@@ -2,5 +2,5 @@
   <Configurations>
     <Platform Name="x64" />
   </Configurations>
-  <Project Path="PhotoEditorQT.vcxproj" />
+  <Project Path="PhotoEditorQT.vcxproj" Id="b551dcaf-a334-4041-bad3-f33d845514d6" />
 </Solution>

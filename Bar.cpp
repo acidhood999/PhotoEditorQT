@@ -1,6 +1,6 @@
 #pragma once
 #include "Bar.h"
-#include "PhotoEditorQT.h" // Добавь это здесь!
+#include "PhotoEditorQT.h"
 #include <QFileDialog>
 #include <QMessageBox>
 
@@ -22,7 +22,7 @@ Bar::Bar(PhotoEditorQT* mainWin) : QObject(mainWin), m_mainWindow(mainWin)
 	connect(exitAction, &QAction::triggered, mainWin, &QWidget::close);
 
 	connect(aboutAction, &QAction::triggered, mainWin, [mainWin]() {
-		QMessageBox::about(mainWin, "About the program", "Qt!");
+		QMessageBox::about(mainWin, "About the program", "This is a simple photo editor to demonstrate\n how easy it is to create applications\n in QT and C++");
 		});
 }
 
@@ -33,8 +33,6 @@ Bar::~Bar()
 void Bar::on_action_triggered()
 {
 	QString fileName = QFileDialog::getOpenFileName(m_mainWindow, "Select an image", "", "Image (*.jpg *.png)");
-
-
 	m_mainWindow->setImage(fileName);
 
 }
