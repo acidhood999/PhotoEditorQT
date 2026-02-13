@@ -7,6 +7,8 @@ PhotoEditorQT::PhotoEditorQT(QWidget *parent) : QMainWindow(parent)
 	scrollArea->setWidget(imageLabel);
 	scrollArea->setWidgetResizable(true);
 
+	//imageLabel->setMinimumHeight(500);
+	//imageLabel->setMinimumWidth(700);
 	listImg = new QListWidget(this);
 	listImg->setMaximumWidth(150);
 
@@ -41,7 +43,7 @@ void PhotoEditorQT::setImage(QString& filename)
 		QFileInfo f = list->at(i);
 		item = new QListWidgetItem(listImg);
 		ImageItem* imgItem = new ImageItem;
-		QPixmap pixmax(f.filePath());
+		QPixmap pixmax(f.filePath());//сделать подгонку
 		imgItem->setData(pixmax.scaledToWidth(100,Qt::SmoothTransformation));
 		item->setSizeHint(imgItem->sizeHint());
 		listImg->setItemWidget(item, imgItem);
@@ -54,8 +56,8 @@ void PhotoEditorQT::setImage(QString& filename)
 void PhotoEditorQT::WindowSet()
 {
 	this->setWindowTitle("Photo editor");
-	this->setMinimumHeight(500);
-	this->setMinimumWidth(500);
+	this->setMinimumHeight(1000);
+	this->setMinimumWidth(1000);
 }
 PhotoEditorQT::~PhotoEditorQT()
 {
