@@ -27,6 +27,7 @@ private:
 	QMenuBar* mBar;
 	QMenu* fileMenu;
 	QMenu* helpMenu;
+
 	QAction* openAction;
 	QAction* exitAction;
 	QAction* aboutAction;

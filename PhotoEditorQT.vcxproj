@@ -100,6 +100,7 @@
       <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">input</DynamicSource>
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
     </ClCompile>
+    <ClCompile Include="Functional.cpp" />
     <ClCompile Include="ImageItem.cpp" />
     <ClCompile Include="PhotoEditorQT.cpp" />
     <ClCompile Include="main.cpp" />
@@ -109,6 +110,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Bar.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Functional.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
