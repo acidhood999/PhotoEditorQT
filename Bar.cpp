@@ -3,7 +3,7 @@
 #include "PhotoEditorQT.h"
 #include <QFileDialog>
 #include <QMessageBox>
-
+#include "Functional.h"
 
 Bar::Bar(PhotoEditorQT* mainWin) : QObject(mainWin), m_mainWindow(mainWin)
 {
@@ -30,14 +30,18 @@ void Bar::on_action_triggered()
 {
 	QString fileName = QFileDialog::getOpenFileName(m_mainWindow, "Select an image", "", "Image (*.jpg *.png)");
 
-	m_mainWindow->setFirstImg(fileName);
-	m_mainWindow->setSecondImg(m_mainWindow->getFirstImg().scaled(
-		m_mainWindow->getImageLabel()->size(),
-		Qt::KeepAspectRatio,
-		Qt::SmoothTransformation
-	));
+	m_mainWindow->setQImageO(fileName);
 
-	m_mainWindow->getImageLabel()->setPixmap(m_mainWindow->getSecondImg());
+	m_mainWindow->setQImageR(m_mainWindow->getQImageO());
+	
+	
+	m_mainWindow->setQImageD(m_mainWindow->getQImageR().scaled(m_mainWindow->getImageLabel()->size(),
+		Qt::KeepAspectRatio,
+		Qt::SmoothTransformation));
+
+	m_mainWindow->getFunctional()->resetSlideWH();
+	m_mainWindow->getImageLabel()->setPixmap(
+		QPixmap::fromImage(m_mainWindow->getQImageD()));
 
 	m_mainWindow->setImage(fileName);
 

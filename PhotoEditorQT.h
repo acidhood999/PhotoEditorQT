@@ -15,6 +15,8 @@
 #include <QGraphicsPixmapItem>
 #include <QMessageBox>
 #include <QScrollArea>
+#include <QImage>
+#include <QColor>
 
 class Functional;
 class ImageItem;
@@ -26,17 +28,22 @@ class PhotoEditorQT : public QMainWindow
 
 public:
     PhotoEditorQT(QWidget *parent = nullptr);
-	void setImage(QString& filename);
-
-	QPixmap getFirstImg() const { return firstImg; }
-	void setFirstImg(const QPixmap& firstImg) { this->firstImg = firstImg; }
-	void setFirstImg(const QString& fileName) { this->firstImg = fileName; }
-
-	QPixmap getSecondImg() const { return secondImg; }
-	void setSecondImg(const QPixmap& secondImg) { this->secondImg = secondImg; }
-	void setSecondImg(const QString& fileName) { this->secondImg = fileName; }
 
 	QLabel* getImageLabel() const { return imageLabel; }
+	Functional* getFunctional() const { return functional; }
+	void setImage(QString& filename);
+
+	QImage getQImageO() const { return imgO; }
+	void setQImageO(const QImage& img) { imgO = img; }
+	void setQImageO(const QString& path) { QImage file(path); imgO = file; }
+
+	QImage getQImageR() const { return imgR; }
+	void setQImageR(const QImage& img) { imgR = img; }
+	void setQImageR(const QString& path) { QImage file(path); imgR = file; }
+
+	QImage getQImageD() const { return imgD; }
+	void setQImageD(const QImage& img) { imgD = img; }
+	void setQImageD(const QString& path) { QImage file(path); imgD = file; }
 
     ~PhotoEditorQT();
 
@@ -53,19 +60,27 @@ private:
 	
 	QListWidgetItem* item = nullptr;
 
-	QVBoxLayout* leftLayout = nullptr;
-	QHBoxLayout* hLayout = nullptr;
+	QWidget* topWidget = nullptr;
+	QHBoxLayout* topLayout = nullptr;
 
+	QVBoxLayout* mainLayout = nullptr;
 	QWidget* container = nullptr;
 
-	QPixmap firstImg;
-	QPixmap secondImg;
+	QImage imgO;
+	QImage imgR;
+	QImage imgD;
+
+	qreal saturatuion{};
 
 	ImageItem* imgItem = nullptr;
 	
 	Functional* functional = nullptr;
 	Bar* bar = nullptr;
 
+
 	void WindowSet();
+	
+
+	//void updateImg();
 };
 

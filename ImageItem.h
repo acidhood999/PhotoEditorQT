@@ -21,7 +21,6 @@ public:
 
 private:
     QLabel* img;
-    QLabel* title;
     QGridLayout* layout;
 
     QString path;

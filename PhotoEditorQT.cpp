@@ -8,55 +8,58 @@ PhotoEditorQT::PhotoEditorQT(QWidget* parent) : QMainWindow(parent)
     imageLabel = new QLabel();
     imageLabel->setFixedSize(500, 350);
     imageLabel->setAlignment(Qt::AlignCenter);
-    imageLabel->setStyleSheet(
-        "QLabel {"
-        "   border: 1px solid #C2C2C2;"
-        "   border-radius: 10px;"
-        "   background-color: #DFDFDF;"
-        "}"
-    );
-
+    imageLabel->setScaledContents(false);
+    imageLabel->setStyleSheet("QLabel { border: 1px solid #C2C2C2; border-radius: 10px; background-color: #DFDFDF; }");
 
     listImg = new QListWidget(this);
     listImg->setFixedWidth(150);
-       
-    
-   
+    listImg->setFixedHeight(350); 
+
     functional = new Functional(this);
 
-    leftContent = new QWidget();
-    leftLayout = new QVBoxLayout(leftContent);
-    leftLayout->addWidget(imageLabel, 0, Qt::AlignCenter);
-    leftLayout->addWidget(functional->getToolsContainer()); 
-    leftLayout->addStretch();
+    topWidget = new QWidget();
+    topLayout = new QHBoxLayout(topWidget);
+    topLayout->setContentsMargins(0, 0, 0, 0);
+    topLayout->setSpacing(10);
+    topLayout->setAlignment(Qt::AlignTop);
+
+    topLayout->addWidget(imageLabel);
+    topLayout->addWidget(listImg);
 
     container = new QWidget(this);
-    hLayout = new QHBoxLayout(container);
-    hLayout->addWidget(leftContent);
-    hLayout->addWidget(listImg);
+    mainLayout = new QVBoxLayout(container);
+    mainLayout->setContentsMargins(15, 15, 15, 15);
+    mainLayout->setSpacing(20);
+
+
+    mainLayout->addWidget(topWidget, 0, Qt::AlignLeft);
+    mainLayout->addWidget(functional->getToolsContainer());
+
+    mainLayout->addStretch();
 
     connect(listImg, &QListWidget::itemDoubleClicked, this, &PhotoEditorQT::on_listWidget_itemDoubleClicked);
 
     setCentralWidget(container);
     WindowSet();
-    
     bar = new Bar(this);
 }
 
 void PhotoEditorQT::on_listWidget_itemDoubleClicked(QListWidgetItem* item)
 {
     imgItem = qobject_cast<ImageItem*>(listImg->itemWidget(item));
-    firstImg = imgItem->getPath();
-    
-    secondImg = firstImg.scaled(
+
+    setQImageO(imgItem->getPath());//1
+
+    imgR = imgO;//2
+
+    imgD = imgO.scaled(
         imageLabel->size(),
         Qt::KeepAspectRatio,
         Qt::SmoothTransformation
-    );
+    );//3
 
     functional->resetSlideWH();
-
-    imageLabel->setPixmap(secondImg);
+    imageLabel->setPixmap(QPixmap::fromImage(imgD));
 
 }
 
@@ -90,8 +93,7 @@ void PhotoEditorQT::setImage(QString& filename)
 void PhotoEditorQT::WindowSet()
 {
     this->setWindowTitle("Photo editor");
-    this->setFixedSize(680, 800);
- 
+    this->setFixedSize(690, 800);
 }
 
 PhotoEditorQT::~PhotoEditorQT()
