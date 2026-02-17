@@ -18,22 +18,24 @@ public:
 	~Bar();
 
 private slots:
-	void on_action_triggered();
+	void actionOpen();
+	void actionSave();
 
 
 private:
-	PhotoEditorQT* m_mainWindow;//save
+	PhotoEditorQT* m_mainWindow = nullptr;//save
 
-	QMenuBar* mBar;
-	QMenu* fileMenu;
-	QMenu* helpMenu;
+	QMenuBar* mBar = nullptr;
+	QMenu* fileMenu = nullptr;
+	QMenu* helpMenu = nullptr;
 
-	QAction* openAction;
-	QAction* exitAction;
-	QAction* aboutAction;
+	QAction* openAction = nullptr;
+	QAction* saveAction = nullptr;
+	QAction* exitAction = nullptr;
+	QAction* aboutAction = nullptr;
 
 
-
+	
 
 };
 

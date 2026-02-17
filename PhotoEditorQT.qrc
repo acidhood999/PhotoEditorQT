@@ -1,4 +1,5 @@
 <RCC>
-    <qresource prefix="PhotoEditorQT">
+    <qresource prefix="/PhotoEditorQT">
+        <file>image.ico</file>
     </qresource>
 </RCC>

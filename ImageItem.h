@@ -20,8 +20,8 @@ public:
     QString getPath() const { return this->path; }
 
 private:
-    QLabel* img;
-    QGridLayout* layout;
+    QLabel* img = nullptr;
+    QGridLayout* layout = nullptr;
 
     QString path;
 };

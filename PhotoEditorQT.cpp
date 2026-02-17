@@ -67,10 +67,12 @@ void PhotoEditorQT::setImage(QString& filename)
 {
     listImg->clear();
 
-    QFileInfo infoFile(filename);
-    QDir dir = infoFile.absolutePath();
-    QStringList filter = { "*.jpg", "*.png", "*.jpeg" };
-    QFileInfoList list = dir.entryInfoList(filter);
+    infoFile.setFile(filename);
+
+    dir = infoFile.absolutePath();
+
+    filter = { "*.jpg", "*.png", "*.jpeg" };
+    list = dir.entryInfoList(filter);
 
     for (int i = 0; i < list.count(); i++)
     {
@@ -93,7 +95,8 @@ void PhotoEditorQT::setImage(QString& filename)
 void PhotoEditorQT::WindowSet()
 {
     this->setWindowTitle("Photo editor");
-    this->setFixedSize(690, 800);
+    this->setFixedSize(690,555);
+    this->setWindowIcon(QIcon(":/PhotoEditorQT/image.ico"));
 }
 
 PhotoEditorQT::~PhotoEditorQT()

@@ -45,6 +45,8 @@ public:
 	void setQImageD(const QImage& img) { imgD = img; }
 	void setQImageD(const QString& path) { QImage file(path); imgD = file; }
 
+
+
     ~PhotoEditorQT();
 
 private slots:
@@ -70,7 +72,10 @@ private:
 	QImage imgR;
 	QImage imgD;
 
-	qreal saturatuion{};
+	QFileInfo infoFile;
+	QDir dir;
+	QStringList filter;
+	QFileInfoList list;
 
 	ImageItem* imgItem = nullptr;
 	
@@ -79,8 +84,5 @@ private:
 
 
 	void WindowSet();
-	
-
-	//void updateImg();
 };
 
