@@ -25,7 +25,8 @@ Bar::Bar(PhotoEditorQT* mainWin) : QObject(mainWin), m_mainWindow(mainWin)
 
 	connect(aboutAction, &QAction::triggered, mainWin, [mainWin]() {
 		QMessageBox::about(mainWin, "About the program", "This is a simple photo editor to demonstrate\n how easy it is to create applications\n in QT and C++");
-		});
+	});
+
 }
 
 void Bar::actionOpen()
