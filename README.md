@@ -24,3 +24,21 @@ The project is built on the principles of modularity (Separation of Concerns), w
 * Functional (Business Logic): The processing engine, containing mathematical algorithms.
 * Bar (UI Controller): The module for managing menus and system dialogs.
 * ImageItem (Data Widget): A custom widget for visualizing items in a list.
+
+## Optimization
+* Direct Pixel Access: Instead of the slow setPixel(), direct access to the memory buffer is used via scanLine() and reinterpret_cast<QRgb*>
+* LUT (Look-Up Table): Applying brightness and contrast filters in constant time 256, which eliminates complex calculations for each individual pixel
+* Event Throttling (Debounce): Implemented a QTimer-based delay. Calculations are only started after user input has stabilized, preventing UI freezes when sliders are moving.
+* Convolution Matrix: Hand-crafted implementation of the convolution matrix for the Sharpness filter.
+
+## Assembly
+* Qt 6.10.1+ (MSVC 2022 x64)
+* Visual Studio 2022 with the Qt VS Tools extension
+  
+## Instructions
+1. Clone the repository.
+2. Open the project in Visual Studio.
+3. Build the project in the Release configuration.
+4. Deploy dependencies using windeployqt:
+'Bash' windeployqt.exe --release path/to/PhotoEditorQT.exe
+
