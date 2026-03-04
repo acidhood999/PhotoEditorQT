@@ -9,12 +9,18 @@ PhotoEditorQT is a high performance graphics editor based on C++ and the Qt 6 fr
 ---
 
 ## Possibilities
-* **Project Gallery: An interactive image list with automatic metadata reading (resolution, file size) and thumbnail generation.
+* Project Gallery: An interactive image list with automatic metadata reading (resolution, file size) and thumbnail generation.
+* Digital Filters: Custom implementation of sharpness and blur algorithms using convolution matrices.
+* Color Correction: Optimized brightness and contrast adjustments.
+* Transformation: High-quality image scaling using SmoothTransformation.
+* Export: Save processed data in PNG, JPG, and JPEG formats.
 
-* **Digital Filters: Custom implementation of sharpness and blur algorithms using convolution matrices.
+## Tech stack and capabilities
 
-* **Color Correction: Optimized brightness and contrast adjustments.
+The project is built on the principles of modularity (Separation of Concerns), which separates the interface and computational logic
 
-* **Transformation: High-quality image scaling using SmoothTransformation.
-
-* **Export: Save processed data in PNG, JPG, and JPEG formats.
+*main.cpp: Initializes QApplication and starts the event loop.
+*PhotoEditorQT (Core): The main controller, managing image states (Original, Result, Display) and interface layout.
+*Functional (Business Logic): The processing engine, containing mathematical algorithms.
+*Bar (UI Controller): The module for managing menus and system dialogs.
+*ImageItem (Data Widget): A custom widget for visualizing items in a list.
