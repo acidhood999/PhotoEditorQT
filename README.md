@@ -39,6 +39,8 @@ The project is built on the principles of modularity (Separation of Concerns), w
 1. Clone the repository.
 2. Open the project in Visual Studio.
 3. Build the project in the Release configuration.
-4. Deploy dependencies using windeployqt:
-'Bash' windeployqt.exe --release path/to/PhotoEditorQT.exe
+4. Deploy dependencies using windeployqt
+```bash
+windeployqt.exe --release path/to/PhotoEditorQT.exe
+```
 
