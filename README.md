@@ -42,6 +42,7 @@ The project is built on the principles of modularity (Separation of Concerns), w
 4. Deploy dependencies using windeployqt
 ```bash
 Bash
+
 windeployqt.exe --release path/to/PhotoEditorQT.exe
 ```
 
