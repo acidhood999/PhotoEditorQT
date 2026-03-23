@@ -3,8 +3,10 @@
 
 Functional::Functional(PhotoEditorQT* mainWin) : QWidget(mainWin), m_mainWindow(mainWin)
 {
-    QGridLayout* mainToolsLayout = new QGridLayout(this);
-    InitializationOfVar(mainWin);
+    toolsContainer = new QWidget(this);
+    QGridLayout* mainToolsLayout = new QGridLayout(toolsContainer);
+
+    InitializationOfVar();
 
     m_debounceTimer = new QTimer(this);
     m_debounceTimer->setSingleShot(true);
@@ -40,7 +42,6 @@ Functional::Functional(PhotoEditorQT* mainWin) : QWidget(mainWin), m_mainWindow(
     mainToolsLayout->addWidget(btnReset, 1, 1);
     mainToolsLayout->addWidget(btnExit, 1, 2);
 
-    toolsContainer = new QWidget();
     toolsContainer->setLayout(mainToolsLayout);
 
     //fix
@@ -63,11 +64,13 @@ Functional::Functional(PhotoEditorQT* mainWin) : QWidget(mainWin), m_mainWindow(
     connect(btnReset, &QPushButton::clicked, this, &Functional::resetBtn);
     connect(btnExit, &QPushButton::clicked, mainWin, &QWidget::close);
 }
+
 void Functional::onSliderValueChanged()
 {
     m_debounceTimer->start(150);
 }
-void Functional::InitializationOfVar(PhotoEditorQT* mainWin)
+
+void Functional::InitializationOfVar()
 {
     sliderW = new QSlider(Qt::Horizontal, this);
     sliderW->setMinimum(10);
@@ -101,6 +104,8 @@ void Functional::InitializationOfVar(PhotoEditorQT* mainWin)
    
 }
 
+
+
 void Functional::applyGroupStyle(QGroupBox* group)
 {
     group->setStyleSheet(
@@ -118,147 +123,126 @@ void Functional::applyGroupStyle(QGroupBox* group)
     );
 }
 
-void Functional::lutToImage(QImage& img, const int lut[256])
+QImage Functional::processImageStatic(QImage img, int sharp, int blur, int cV, int bV)
 {
-    for (int y = 0; y < img.height(); y++)
-    {
-        QRgb* line = reinterpret_cast<QRgb*>(img.scanLine(y));
+    if (img.isNull()) return img;
+    QImage res = img.convertToFormat(QImage::Format_ARGB32);
 
-        for (int x = 0; x < img.width(); x++)
+  
+    if (sharp != 0) applySharpness(res, sharp);
+    if (blur != 0)  applySharpness(res, -blur); 
+
+
+    if (cV != 0 || bV != 0)
+    {
+        int localLut[256];
+        float factor = (259.0f * (cV + 255.0f)) / (255.0f * (259.0f - cV));
+        for (int i = 0; i < 256; i++) 
         {
-            QRgb pixel = line[x];
-            line[x] = qRgba(lut[qRed(pixel)],
-                lut[qGreen(pixel)],
-                lut[qBlue(pixel)],
-                qAlpha(pixel));
+            localLut[i] = qBound(0, qRound(factor * (i - 128) + 128) + bV, 255);
+        }
+        for (int y = 0; y < res.height(); y++)
+        {
+            QRgb* line = (QRgb*)res.scanLine(y);
+            for (int x = 0; x < res.width(); x++)
+            {
+                line[x] = qRgba(localLut[qRed(line[x])], localLut[qGreen(line[x])], localLut[qBlue(line[x])], qAlpha(line[x]));
+            }
         }
     }
+    return res;
 }
 
-void Functional::contrastAndBrightness(int lut[256], int cV, int bV)
+void Functional::applySharpness(QImage& img, int value)
 {
-    factor = (259.0 * (cV + 255.0)) / (255.0 * (259.0 - cV));
-
-    for (int i = 0; i < 256; i++)
-    {
-        int result = qRound(factor * (i - 128) + 128) + bV;
-        lut[i] = qBound(0, result, 255);
-    }
-}
-
-void Functional::sharpness(QImage& img, int value)
-{
+    if (img.isNull() || value == 0) return;
 
     QImage source = img;
+    float amt = value / 100.0f;
     int width = img.width();
     int height = img.height();
-    float amt = value / 100.0f;
 
     for (int y = 1; y < height - 1; y++)
     {
-        const QRgb* prevLine = reinterpret_cast<const QRgb*>(source.constScanLine(y - 1));
-        const QRgb* currLine = reinterpret_cast<const QRgb*>(source.constScanLine(y));
-        const QRgb* nextLine = reinterpret_cast<const QRgb*>(source.constScanLine(y + 1));
-        QRgb* destLine = reinterpret_cast<QRgb*>(img.scanLine(y));
+        const QRgb* prev = (const QRgb*)source.constScanLine(y - 1);
+        const QRgb* curr = (const QRgb*)source.constScanLine(y);
+        const QRgb* next = (const QRgb*)source.constScanLine(y + 1);
+        QRgb* dest = (QRgb*)img.scanLine(y);
 
-        for (int x = 1; x < width - 1; x++)
+        for (int x = 1; x < width - 1; x++) 
         {
-            QRgb c = currLine[x];
-            QRgb t = prevLine[x];
-            QRgb b = nextLine[x];
-            QRgb l = currLine[x - 1];
-            QRgb r = currLine[x + 1];
+            int r = qRed(curr[x]) * 5 - (qRed(prev[x]) + qRed(next[x]) + qRed(curr[x - 1]) + qRed(curr[x + 1]));
+            int g = qGreen(curr[x]) * 5 - (qGreen(prev[x]) + qGreen(next[x]) + qGreen(curr[x - 1]) + qGreen(curr[x + 1]));
+            int b = qBlue(curr[x]) * 5 - (qBlue(prev[x]) + qBlue(next[x]) + qBlue(curr[x - 1]) + qBlue(curr[x + 1]));
 
-            int red = qRed(c) * 5 - (qRed(t) + qRed(b) + qRed(l) + qRed(r));
-            int green = qGreen(c) * 5 - (qGreen(t) + qGreen(b) + qGreen(l) + qGreen(r));
-            int blue = qBlue(c) * 5 - (qBlue(t) + qBlue(b) + qBlue(l) + qBlue(r));
-
-            destLine[x] = qRgba(
-                qBound(0, qRound(qRed(c) * (1 - amt) + red * amt), 255),
-                qBound(0, qRound(qGreen(c) * (1 - amt) + green * amt), 255),
-                qBound(0, qRound(qBlue(c) * (1 - amt) + blue * amt), 255),
-                qAlpha(c)
+            dest[x] = qRgba(
+                qBound(0, qRound(qRed(curr[x]) * (1 - amt) + r * amt), 255),
+                qBound(0, qRound(qGreen(curr[x]) * (1 - amt) + g * amt), 255),
+                qBound(0, qRound(qBlue(curr[x]) * (1 - amt) + b * amt), 255),
+                qAlpha(curr[x])
             );
         }
     }
 }
 
+
 void Functional::updateAll()
 {
-    if (m_mainWindow->getQImageO().isNull()) return;
-    //WH
-    baseSize = m_mainWindow->getQImageO().scaled(
-        m_mainWindow->getImageLabel()->size(),
-        Qt::KeepAspectRatio
-    ).size();
+    if (!m_mainWindow || m_mainWindow->getQImageO().isNull()) return;
 
-    int disW = baseSize.width() * sliderW->value() / 100;
-    int disH = baseSize.height() * sliderH->value() / 100;
-    //WH
-    QImage previewImg = m_mainWindow->getQImageO().scaled(disW, disH,
-        Qt::IgnoreAspectRatio, Qt::SmoothTransformation)
-        .convertToFormat(QImage::Format_ARGB32);
+    // size
+    QSize labelSize = m_mainWindow->getImageLabel()->size();
+    QSize scaledSize = m_mainWindow->getQImageO().scaled(labelSize, Qt::KeepAspectRatio).size();
 
+    int previewW = scaledSize.width() * sliderW->value() / 100;
+    int previewH = scaledSize.height() * sliderH->value() / 100;
 
-    //sharpness
-    if (sliderSharpness->value() != 0) sharpness(previewImg, sliderSharpness->value());
-    //sharpness
-    //blur
-    if (sliderSharpness->value() != 0) sharpness(previewImg, sliderSharpness->value()/4);
-    if (sliderBlur->value() != 0)      sharpness(previewImg, -sliderBlur->value()/3);
-    //blur
+    // 
+    QImage previewImg = m_mainWindow->getQImageO().scaled(previewW, previewH, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
+    // filters
+    previewImg = processImageStatic(previewImg,
+        sliderSharpness->value(),
+        sliderBlur->value(),
+        sliderСontrast->value(),
+        sliderBrightness->value());
 
-    //contrast
-
-
-    if (sliderСontrast->value() != 0 || sliderBrightness->value() != 0)
-    {
-        contrastAndBrightness(lut, sliderСontrast->value(), sliderBrightness->value());
-        lutToImage(previewImg, lut);
-    }
-    //contrast
-
-    //res
-    m_mainWindow->setQImageD(previewImg);
+    // display
+    m_mainWindow->setQImageD(previewImg); 
     m_mainWindow->getImageLabel()->setPixmap(QPixmap::fromImage(previewImg));
-    //res
 }
 
 void Functional::updateResult()
 {
-    if (m_mainWindow->getQImageO().isNull()) return;
+    if (!m_mainWindow || m_mainWindow->getQImageO().isNull()) return;
 
-    //WH
-    resW = m_mainWindow->getQImageO().width() * sliderW->value() / 100;
-    resH = m_mainWindow->getQImageO().height() * sliderH->value() / 100;
-    //WH
+    int resW = m_mainWindow->getQImageO().width() * sliderW->value() / 100;
+    int resH = m_mainWindow->getQImageO().height() * sliderH->value() / 100;
+    int sV = sliderSharpness->value();
+    int blV = sliderBlur->value();
+    int cV = sliderСontrast->value();
+    int bV = sliderBrightness->value();
+    QImage sourceImg = m_mainWindow->getQImageO();
 
-    QImage fullImg = m_mainWindow->getQImageO().scaled(resW, resH,
-        Qt::IgnoreAspectRatio, Qt::SmoothTransformation)
-        .convertToFormat(QImage::Format_ARGB32);
+    QPointer<QFutureWatcher<QImage>> watcher = new QFutureWatcher<QImage>(this);
 
-
-    //sharpness
-    if (sliderSharpness->value() != 0) sharpness(fullImg, sliderSharpness->value());
-    if (sliderBlur->value() != 0)      sharpness(fullImg, -sliderBlur->value());
-    //sharpness
-
-    //contrast
-
-
-    if (sliderСontrast->value() != 0 || sliderBrightness->value() != 0)
+    connect(watcher.data(), &QFutureWatcher<QImage>::finished, this, [=]()
     {
-        contrastAndBrightness(lut, sliderСontrast->value(), sliderBrightness->value());
-        lutToImage(fullImg, lut);
-    }
-    //contrast
+        if (watcher && m_mainWindow)
+        {
+            m_mainWindow->setQImageR(watcher->result());
+            watcher->deleteLater();
+              
+            // m_mainWindow->getImageLabel()->setPixmap(QPixmap::fromImage(m_mainWindow->getQImageR().scaled(m_mainWindow->getImageLabel()->size(), Qt::KeepAspectRatio)));
+        }
+    });
 
-    //res
-    m_mainWindow->setQImageR(fullImg);
-    //res
+    watcher->setFuture(QtConcurrent::run([=]()
+    {
+        QImage scaled = sourceImg.scaled(resW, resH, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        return processImageStatic(scaled, sV, blV, cV, bV);
+    }));
 }
-
 void Functional::resetBtn()
 {
     resetSlideWH();

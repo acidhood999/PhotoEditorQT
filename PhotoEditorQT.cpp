@@ -5,7 +5,7 @@
 
 PhotoEditorQT::PhotoEditorQT(QWidget* parent) : QMainWindow(parent)
 {
-    imageLabel = new QLabel();
+    imageLabel = new QLabel(this);
     imageLabel->setFixedSize(500, 350);
     imageLabel->setAlignment(Qt::AlignCenter);
     imageLabel->setScaledContents(false);
@@ -17,7 +17,7 @@ PhotoEditorQT::PhotoEditorQT(QWidget* parent) : QMainWindow(parent)
 
     functional = new Functional(this);
 
-    topWidget = new QWidget();
+    topWidget = new QWidget(this);
     topLayout = new QHBoxLayout(topWidget);
     topLayout->setContentsMargins(0, 0, 0, 0);
     topLayout->setSpacing(10);
@@ -47,6 +47,7 @@ PhotoEditorQT::PhotoEditorQT(QWidget* parent) : QMainWindow(parent)
 void PhotoEditorQT::on_listWidget_itemDoubleClicked(QListWidgetItem* item)
 {
     imgItem = qobject_cast<ImageItem*>(listImg->itemWidget(item));
+    if (!imgItem) return;
 
     setQImageO(imgItem->getPath());//1
 
@@ -78,13 +79,13 @@ void PhotoEditorQT::setImage(QString& filename)
     {
         QFileInfo f = list.at(i);
         QListWidgetItem* listItem = new QListWidgetItem(listImg);
-        imgItem = new ImageItem;
+        imgItem = new ImageItem(listImg);
 
         QPixmap pix(f.filePath());
         QString res = QString("%1x%2").arg(pix.width()).arg(pix.height());
         QString sizeStr = QString::number(f.size() / 1024) + " KB";
 
-        imgItem->setData(pix.scaledToWidth(100, Qt::SmoothTransformation),
+        imgItem->setData(pix.scaled(100, 100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation),
             f.fileName(), res, sizeStr, f.filePath());
 
         listItem->setSizeHint(imgItem->sizeHint());
@@ -99,7 +100,4 @@ void PhotoEditorQT::WindowSet()
     this->setWindowIcon(QIcon(":/PhotoEditorQT/image.ico"));
 }
 
-PhotoEditorQT::~PhotoEditorQT()
-{
-    
-}
+PhotoEditorQT::~PhotoEditorQT() {}

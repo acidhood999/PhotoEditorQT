@@ -6,6 +6,10 @@
 #include <QGroupBox>
 #include <QTimer>
 #include <QPushButton>
+#include <QPointer>
+#include <QtConcurrent>
+#include <QFuture>
+#include <QFutureWatcher>
 
 class PhotoEditorQT;
 
@@ -16,59 +20,35 @@ public:
 	Functional(PhotoEditorQT* mainWin);
 
 	void resetSlideWH();
-
-	void getUpdate() { updateAll(); }
-
 	QWidget* getToolsContainer() { return toolsContainer; }
 	~Functional();
+
+public slots:
+	void updateResult();
 
 private slots:
 
 	void updateAll();
-	void updateResult();
 	void resetBtn();
 	void saveBtn();
 	void onSliderValueChanged();
 
 private:
 
-	PhotoEditorQT* m_mainWindow = nullptr;
+	QPointer<PhotoEditorQT> m_mainWindow;
 
-	QWidget* toolsContainer = nullptr;
-	QGridLayout* toolsLayout = nullptr;
-
-	QSlider* sliderW = nullptr;
-	QSlider* sliderH = nullptr;
-
-	QSlider* sliderСontrast = nullptr;
-	QSlider* sliderBrightness = nullptr;
-
-	QSlider* sliderSharpness = nullptr;
-	QSlider* sliderBlur = nullptr;
-	
-	QPushButton* btnSave = nullptr;
-	QPushButton* btnReset = nullptr;
-	QPushButton* btnExit = nullptr;
-
-	QColor color;
+	QPointer<QWidget> toolsContainer;
+	QPointer<QSlider> sliderW, sliderH;
+	QPointer<QSlider> sliderСontrast, sliderBrightness;
+	QPointer<QSlider> sliderSharpness, sliderBlur;
+	QPointer<QPushButton> btnSave, btnReset, btnExit;
 
 	QTimer* m_debounceTimer = nullptr;
 
-	int resW{};
-	int resH{};
-	QSize baseSize;
-
-	int lut[256] = { 0 };
-
-	float factor{0.0f};
-	float amount{ 0.0f };
-
-	void InitializationOfVar(PhotoEditorQT* mainWin);
+	void InitializationOfVar();
 	void applyGroupStyle(QGroupBox* group);
 
-	void lutToImage(QImage& img, const int lut[256]);
-	void contrastAndBrightness(int lut[256], int cV, int bV);
 
-	void sharpness(QImage& img, int value);
-	
+	static QImage processImageStatic(QImage img, int sharp, int blur, int cV, int bV);
+	static void applySharpness(QImage& img, int value);
 };

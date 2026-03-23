@@ -4,6 +4,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QMenuBar>
 #include <QMenu>
+#include <QPointer>
 
 class PhotoEditorQT;
 
@@ -13,9 +14,9 @@ class Bar : public QObject
 
 public:
 
-	Bar(PhotoEditorQT* parent = nullptr);
+	explicit Bar(PhotoEditorQT* parent = nullptr);
 
-	~Bar();
+	~Bar() override;
 
 private slots:
 	void actionOpen();
@@ -23,20 +24,16 @@ private slots:
 
 
 private:
-	PhotoEditorQT* m_mainWindow = nullptr;//save
+	QPointer<PhotoEditorQT> m_mainWindow;//save
 
-	QMenuBar* mBar = nullptr;
-	QMenu* fileMenu = nullptr;
-	QMenu* helpMenu = nullptr;
+	QPointer<QMenuBar> mBar;
+	QPointer<QMenu> fileMenu;
+	QPointer<QMenu> helpMenu;
 
-	QAction* openAction = nullptr;
-	QAction* saveAction = nullptr;
-	QAction* exitAction = nullptr;
-	QAction* aboutAction = nullptr;
-
-
-	
-
+	QPointer<QAction> openAction;
+	QPointer<QAction> saveAction;
+	QPointer<QAction> exitAction;
+	QPointer<QAction> aboutAction;
 };
 
 

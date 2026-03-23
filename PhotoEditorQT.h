@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMainWindow>
 #include <QLabel>
 #include <QPixmap>
 #include <QSlider>
@@ -17,6 +16,9 @@
 #include <QScrollArea>
 #include <QImage>
 #include <QColor>
+#include <QPointer> 
+#include <memory>
+#include "Functional.h"
 
 class Functional;
 class ImageItem;
@@ -27,7 +29,8 @@ class PhotoEditorQT : public QMainWindow
     Q_OBJECT
 
 public:
-    PhotoEditorQT(QWidget *parent = nullptr);
+	explicit PhotoEditorQT(QWidget *parent = nullptr);
+	~PhotoEditorQT() override;
 
 	QLabel* getImageLabel() const { return imageLabel; }
 	Functional* getFunctional() const { return functional; }
@@ -47,7 +50,7 @@ public:
 
 
 
-    ~PhotoEditorQT();
+    
 
 private slots:
 
@@ -55,18 +58,18 @@ private slots:
 
 private:
 
-	QListWidget* listImg = nullptr;
+	QPointer<QListWidget> listImg;
 
-	QLabel* imageLabel = nullptr;
-	QWidget* leftContent = nullptr;
+	QPointer<QLabel> imageLabel;
+	QPointer<QWidget> leftContent;
 	
-	QListWidgetItem* item = nullptr;
+	QPointer<QListWidgetItem> item;
 
-	QWidget* topWidget = nullptr;
-	QHBoxLayout* topLayout = nullptr;
+	QPointer<QWidget> topWidget;
+	QPointer<QHBoxLayout> topLayout;
 
-	QVBoxLayout* mainLayout = nullptr;
-	QWidget* container = nullptr;
+	QPointer<QVBoxLayout> mainLayout;
+	QPointer<QWidget> container;
 
 	QImage imgO;
 	QImage imgR;
@@ -77,11 +80,10 @@ private:
 	QStringList filter;
 	QFileInfoList list;
 
-	ImageItem* imgItem = nullptr;
+	QPointer<ImageItem> imgItem;
 	
-	Functional* functional = nullptr;
-	Bar* bar = nullptr;
-
+	QPointer<Functional> functional;
+	QPointer<Bar> bar;
 
 	void WindowSet();
 };

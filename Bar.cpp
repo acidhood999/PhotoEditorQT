@@ -7,64 +7,75 @@
 
 Bar::Bar(PhotoEditorQT* mainWin) : QObject(mainWin), m_mainWindow(mainWin)
 {
-
+	if (!mainWin) return;
 	mBar = mainWin->menuBar();
-	fileMenu = mBar->addMenu("File");
-	helpMenu = mBar->addMenu("Reference");
+	fileMenu = mBar->addMenu(tr("File"));
+	helpMenu = mBar->addMenu(tr("Reference"));
 
-	openAction = fileMenu->addAction("Open photo");
-	saveAction = fileMenu->addAction("Save photo");
-	exitAction = fileMenu->addAction("Exit");
+	openAction = fileMenu->addAction(tr("Open photo"));
+	saveAction = fileMenu->addAction(tr("Save photo"));
+	fileMenu->addSeparator(); 
+	exitAction = fileMenu->addAction(tr("Exit"));
 
-	aboutAction = helpMenu->addAction("About the program");
+	aboutAction = helpMenu->addAction(tr("About the program"));
 
 	connect(openAction, &QAction::triggered, this, &Bar::actionOpen);
 	connect(saveAction, &QAction::triggered, this, &Bar::actionSave);
 	connect(exitAction, &QAction::triggered, mainWin, &QWidget::close);
 
-
-	connect(aboutAction, &QAction::triggered, mainWin, [mainWin]() {
-		QMessageBox::about(mainWin, "About the program", "This is a simple photo editor to demonstrate\n how easy it is to create applications\n in QT and C++");
+	connect(aboutAction, &QAction::triggered, this, [this]() 
+	{
+		if (m_mainWindow) 
+		{
+			QMessageBox::about(m_mainWindow, tr("About the program"), tr("This is a simple photo editor demo in Qt and C++"));
+		}
 	});
 
 }
 
 void Bar::actionOpen()
 {
-	QString fileName = QFileDialog::getOpenFileName(m_mainWindow, "Select an image", "", "Image (*.jpg *.png *.jpeg)");
+	if (!m_mainWindow) return;
+
+	QString fileName = QFileDialog::getOpenFileName(m_mainWindow, tr("Select an image"), "", tr("Image (*.jpg *.png *.jpeg)"));
+
+	if (fileName.isEmpty()) return;
+
 
 	m_mainWindow->setQImageO(fileName);
 
 	m_mainWindow->setQImageR(m_mainWindow->getQImageO());
 	
-	
-	m_mainWindow->setQImageD(m_mainWindow->getQImageR().scaled(m_mainWindow->getImageLabel()->size(),
+	QImage preview = m_mainWindow->getQImageR().scaled(
+		m_mainWindow->getImageLabel()->size(),
 		Qt::KeepAspectRatio,
-		Qt::SmoothTransformation));
+		Qt::SmoothTransformation
+	);
 
-	m_mainWindow->getFunctional()->resetSlideWH();
-	m_mainWindow->getImageLabel()->setPixmap(
-		QPixmap::fromImage(m_mainWindow->getQImageD()));
+	m_mainWindow->setQImageD(preview);
 
+	if (m_mainWindow->getFunctional()) m_mainWindow->getFunctional()->resetSlideWH();
+
+	m_mainWindow->getImageLabel()->setPixmap(QPixmap::fromImage(preview));
 	m_mainWindow->setImage(fileName);
 
 }
 void Bar::actionSave()
 {
-	m_mainWindow->getFunctional()->getUpdate();
+	if (!m_mainWindow || !m_mainWindow->getFunctional()) return;
 
-	if (m_mainWindow->getQImageR().isNull()) return;
+	m_mainWindow->getFunctional()->updateResult();
+
+	QImage imgToSave = m_mainWindow->getQImageR();
+	if (imgToSave.isNull()) return;
 
 	QString filePath = QFileDialog::getSaveFileName(m_mainWindow, tr("Save"), "", tr("Images (*.png *.jpg *.jpeg)"));
 
-	if (!filePath.isEmpty())
+	if (!filePath.isEmpty()) 
 	{
-		m_mainWindow->getQImageR().save(filePath);
+		imgToSave.save(filePath);
 	}
 }
-Bar::~Bar()
-{
-}
 
-
+Bar::~Bar() {}
 
