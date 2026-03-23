@@ -39,7 +39,10 @@ The project is built on the principles of modularity (Separation of Concerns), w
 1. Clone the repository.
 2. Open the project in Visual Studio.
 3. Build the project in the Release configuration.
-4. Deploy dependencies using windeployqt
+4. **Configure Include Paths:** Since the headers are located in a separate directory, you need to tell the compiler where to find them:  
+   * Right-click on the project in **Solution Explorer** → **Properties**.  
+   * Go to **C/C++** → **General**.  
+   * In **Additional Include Directories**, add: `$(ProjectDir)include`
 ```bash
 Bash
 
