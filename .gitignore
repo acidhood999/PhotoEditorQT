@@ -361,3 +361,19 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# --- Qt specific ---
+node_modules/
+Release/
+Debug/
+x64/
+*.moc
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.qrc.depends
+/GeneratedFiles/
+
+*.user
+*.user.*
