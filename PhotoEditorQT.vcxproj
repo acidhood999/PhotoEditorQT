@@ -10,6 +10,31 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="include\Bar.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="include\Functional.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="include\ImageItem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="include\PhotoEditorQT.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\image.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="resources\PhotoEditorQT.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Bar.cpp" />
+    <ClCompile Include="src\Functional.cpp" />
+    <ClCompile Include="src\ImageItem.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\PhotoEditorQT.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B551DCAF-A334-4041-BAD3-F33D845514D6}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>
@@ -63,6 +88,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -91,29 +121,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <QtRcc Include="PhotoEditorQT.qrc" />
-    <QtMoc Include="PhotoEditorQT.h" />
-    <ClCompile Include="Bar.cpp">
-      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
-      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
-      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">input</DynamicSource>
-      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
-    </ClCompile>
-    <ClCompile Include="Functional.cpp" />
-    <ClCompile Include="ImageItem.cpp" />
-    <ClCompile Include="PhotoEditorQT.cpp" />
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="ImageItem.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="Bar.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="Functional.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
     <Import Project="$(QtMsBuild)\qt.targets" />

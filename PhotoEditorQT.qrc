@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/PhotoEditorQT">
-        <file>image.ico</file>
-    </qresource>
-</RCC>

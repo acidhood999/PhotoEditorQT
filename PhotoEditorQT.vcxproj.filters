@@ -23,39 +23,44 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="PhotoEditorQT.qrc">
+    <QtMoc Include="include\Bar.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="include\Functional.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="include\ImageItem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="include\PhotoEditorQT.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\image.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="resources\PhotoEditorQT.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-    <QtMoc Include="PhotoEditorQT.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <ClCompile Include="PhotoEditorQT.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\Bar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ImageItem.cpp">
+    <ClCompile Include="src\Functional.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Bar.cpp">
+    <ClCompile Include="src\ImageItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Functional.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="ImageItem.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Bar.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Functional.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
+    <ClCompile Include="src\PhotoEditorQT.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
