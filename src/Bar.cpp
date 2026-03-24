@@ -7,30 +7,88 @@
 
 Bar::Bar(PhotoEditorQT* mainWin) : QObject(mainWin), m_mainWindow(mainWin)
 {
-	if (!mainWin) return;
-	mBar = mainWin->menuBar();
-	fileMenu = mBar->addMenu(tr("File"));
-	helpMenu = mBar->addMenu(tr("Reference"));
+    if (!mainWin) return;
+    mBar = mainWin->menuBar();
 
-	openAction = fileMenu->addAction(tr("Open photo"));
-	saveAction = fileMenu->addAction(tr("Save photo"));
-	fileMenu->addSeparator(); 
-	exitAction = fileMenu->addAction(tr("Exit"));
+    fileMenu = mBar->addMenu(tr("File"));
+    helpMenu = mBar->addMenu(tr("Reference"));
 
-	aboutAction = helpMenu->addAction(tr("About the program"));
+    openAction = fileMenu->addAction(tr("Open photo"));
+    saveAction = fileMenu->addAction(tr("Save photo"));
+    fileMenu->addSeparator();
+    exitAction = fileMenu->addAction(tr("Exit"));
 
-	connect(openAction, &QAction::triggered, this, &Bar::actionOpen);
-	connect(saveAction, &QAction::triggered, this, &Bar::actionSave);
-	connect(exitAction, &QAction::triggered, mainWin, &QWidget::close);
+    aboutAction = helpMenu->addAction(tr("About the program"));
 
-	connect(aboutAction, &QAction::triggered, this, [this]() 
-	{
-		if (m_mainWindow) 
-		{
-			QMessageBox::about(m_mainWindow, tr("About the program"), tr("This is a simple photo editor demo in Qt and C++"));
-		}
-	});
 
+    QString barStyle = R"(
+        QMenuBar 
+        {
+            background-color: #FFFFFF; 
+            border: 1px solid #DEE2E6; 
+            border-radius: 12px;  
+            padding: 5px 10px;
+            color: #2D3436;
+            font-weight: bold;
+            font-size: 12px;
+            margin: 0px; 
+        }
+
+        QMenuBar::item 
+        {
+            background-color: transparent;
+            padding: 8px 15px;
+            border-radius: 8px; 
+            margin-right: 5px;
+        }
+
+        QMenuBar::item:selected 
+        {
+            background-color: #F1F2F6;
+            color: #000000;
+        }
+
+        QMenu 
+        {
+            background-color: #FFFFFF;
+            border: 1px solid #DEE2E6;
+            border-radius: 12px; 
+            padding: 5px;
+        }
+
+        QMenu::item
+        {
+            padding: 8px 25px;
+            border-radius: 6px;
+            color: #2D3436;
+        }
+
+        QMenu::item:selected 
+        {
+            background-color: #2D3436; 
+            color: #FFFFFF;
+        }
+
+        QMenu::separator
+        {
+            height: 1px;
+            background: #EDF0F2;
+            margin: 5px 10px;
+        }
+    )";
+    mBar->setStyleSheet(barStyle);
+
+    connect(openAction, &QAction::triggered, this, &Bar::actionOpen);
+    connect(saveAction, &QAction::triggered, this, &Bar::actionSave);
+    connect(exitAction, &QAction::triggered, mainWin, &QWidget::close);
+
+    connect(aboutAction, &QAction::triggered, this, [this]()
+        {
+            if (m_mainWindow)
+            {
+                QMessageBox::about(m_mainWindow, tr("About the program"), tr("This is a simple photo editor demo in Qt and C++"));
+            }
+        });
 }
 
 void Bar::actionOpen()

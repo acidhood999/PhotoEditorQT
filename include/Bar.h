@@ -15,7 +15,7 @@ class Bar : public QObject
 public:
 
 	explicit Bar(PhotoEditorQT* parent = nullptr);
-
+	QMenuBar* getMenuBar() { return mBar; }
 	~Bar() override;
 
 private slots:

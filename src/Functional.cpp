@@ -4,62 +4,64 @@
 Functional::Functional(PhotoEditorQT* mainWin) : QWidget(mainWin), m_mainWindow(mainWin)
 {
     toolsContainer = new QWidget(this);
-    QGridLayout* mainToolsLayout = new QGridLayout(toolsContainer);
+    QPointer<QGridLayout> mainToolsLayout = new QGridLayout(toolsContainer);
+    mainToolsLayout->setContentsMargins(5, 5, 5, 5);
+    mainToolsLayout->setSpacing(15);
 
     InitializationOfVar();
 
     m_debounceTimer = new QTimer(this);
     m_debounceTimer->setSingleShot(true);
 
-    QGroupBox* resolutionGroup = new QGroupBox("Image resolution", this);
-    QGridLayout* resolutionLayout = new QGridLayout(resolutionGroup);
-    resolutionLayout->addWidget(new QLabel("Width:"), 0, 0);
+    QPointer <QGroupBox> resolutionGroup = new QGroupBox("Resolution", this);
+    QPointer <QGridLayout> resolutionLayout = new QGridLayout(resolutionGroup);
+    resolutionLayout->addWidget(new QLabel("Width"), 0, 0);
     resolutionLayout->addWidget(sliderW, 0, 1);
-    resolutionLayout->addWidget(new QLabel("Height:"), 1, 0);
+    resolutionLayout->addWidget(new QLabel("Height"), 1, 0);
     resolutionLayout->addWidget(sliderH, 1, 1);
     applyGroupStyle(resolutionGroup);
 
-    QGroupBox* colorGroup = new QGroupBox("Сontrast and Brightness", this);
-    QGridLayout* colorLayout = new QGridLayout(colorGroup);
-    colorLayout->addWidget(new QLabel("Сontrast:"), 0, 0);
+    QPointer<QGroupBox> colorGroup = new QGroupBox("Contrast and Brightness", this);
+    QPointer<QGridLayout> colorLayout = new QGridLayout(colorGroup);
+    colorLayout->addWidget(new QLabel("Contrast"), 0, 0);
     colorLayout->addWidget(sliderСontrast, 0, 1);
-    colorLayout->addWidget(new QLabel("Brightness:"), 1, 0);
+    colorLayout->addWidget(new QLabel("Brightness"), 1, 0);
     colorLayout->addWidget(sliderBrightness, 1, 1);
     applyGroupStyle(colorGroup);
 
-    QGroupBox* Group = new QGroupBox("Effects", this);
-    QGridLayout* GroupLayout = new QGridLayout(Group);
-    GroupLayout->addWidget(new QLabel("Sharpness:"), 0, 0);
+    QPointer<QGroupBox> Group = new QGroupBox("Effects", this);
+    QPointer<QGridLayout> GroupLayout = new QGridLayout(Group);
+    GroupLayout->addWidget(new QLabel("Sharpness"), 0, 0);
     GroupLayout->addWidget(sliderSharpness, 0, 1);
-    GroupLayout->addWidget(new QLabel("Blur:"), 1, 0);
+    GroupLayout->addWidget(new QLabel("Blur"), 1, 0);
     GroupLayout->addWidget(sliderBlur, 1, 1);
     applyGroupStyle(Group);
 
     mainToolsLayout->addWidget(resolutionGroup, 0, 0);
     mainToolsLayout->addWidget(colorGroup, 0, 1);
     mainToolsLayout->addWidget(Group, 0, 2);
-    mainToolsLayout->addWidget(btnSave, 1, 0);
-    mainToolsLayout->addWidget(btnReset, 1, 1);
-    mainToolsLayout->addWidget(btnExit, 1, 2);
 
-    toolsContainer->setLayout(mainToolsLayout);
+    QPointer <QHBoxLayout> btnLayout = new QHBoxLayout();
+    btnLayout->setSpacing(10);
+    btnLayout->addWidget(btnSave);
+    btnLayout->addWidget(btnReset);
+    btnLayout->addWidget(btnExit);
+    mainToolsLayout->addLayout(btnLayout, 1, 0, 1, 3);
 
-    //fix
+    toolsContainer->setStyleSheet(this->styleSheet());
+
     connect(m_debounceTimer, &QTimer::timeout, this, &Functional::updateAll);
-    //table
     connect(sliderW, &QSlider::valueChanged, this, &Functional::onSliderValueChanged);
     connect(sliderH, &QSlider::valueChanged, this, &Functional::onSliderValueChanged);
     connect(sliderСontrast, &QSlider::valueChanged, this, &Functional::onSliderValueChanged);
     connect(sliderBrightness, &QSlider::valueChanged, this, &Functional::onSliderValueChanged);
     connect(sliderSharpness, &QSlider::valueChanged, this, &Functional::onSliderValueChanged);
     connect(sliderBlur, &QSlider::valueChanged, this, &Functional::onSliderValueChanged);
-    //save
     connect(sliderW, &QSlider::sliderReleased, this, &Functional::updateResult);
     connect(sliderH, &QSlider::sliderReleased, this, &Functional::updateResult);
     connect(sliderСontrast, &QSlider::sliderReleased, this, &Functional::updateResult);
     connect(sliderBrightness, &QSlider::sliderReleased, this, &Functional::updateResult);
     connect(sliderBlur, &QSlider::sliderReleased, this, &Functional::updateResult);
-    //btn
     connect(btnSave, &QPushButton::clicked, this, &Functional::saveBtn);
     connect(btnReset, &QPushButton::clicked, this, &Functional::resetBtn);
     connect(btnExit, &QPushButton::clicked, mainWin, &QWidget::close);
@@ -72,57 +74,126 @@ void Functional::onSliderValueChanged()
 
 void Functional::InitializationOfVar()
 {
-    sliderW = new QSlider(Qt::Horizontal, this);
-    sliderW->setMinimum(10);
-    sliderW->setMaximum(200);
-    sliderW->setValue(100);
+    sliderW = new QSlider(Qt::Horizontal, this); sliderW->setRange(10, 200); sliderW->setValue(100);
+    sliderH = new QSlider(Qt::Horizontal, this); sliderH->setRange(10, 200); sliderH->setValue(100);
+    sliderСontrast = new QSlider(Qt::Horizontal, this); sliderСontrast->setRange(-100, 100); sliderСontrast->setValue(0);
+    sliderBrightness = new QSlider(Qt::Horizontal, this); sliderBrightness->setRange(-100, 100); sliderBrightness->setValue(0);
+    sliderSharpness = new QSlider(Qt::Horizontal, this); sliderSharpness->setRange(0, 100); sliderSharpness->setValue(0);
+    sliderBlur = new QSlider(Qt::Horizontal, this); sliderBlur->setRange(0, 100); sliderBlur->setValue(0);
 
-    sliderH = new QSlider(Qt::Horizontal, this);
-    sliderH->setMinimum(10);
-    sliderH->setMaximum(200);
-    sliderH->setValue(100);
+    btnSave = new QPushButton("Save Image", this);
+    btnReset = new QPushButton("Reset All", this);
+    btnExit = new QPushButton("Exit", this);
 
-    sliderСontrast = new QSlider(Qt::Horizontal, this);
-    sliderСontrast->setRange(-100, 100);
-    sliderСontrast->setValue(0);
+    btnSave->setObjectName("btnSave");
+    btnReset->setObjectName("btnReset");
+    btnExit->setObjectName("btnExit");
 
-    sliderBrightness = new QSlider(Qt::Horizontal, this);
-    sliderBrightness->setRange(-100, 100);
-    sliderBrightness->setValue(0);
 
-    sliderSharpness = new QSlider(Qt::Horizontal, this);
-    sliderSharpness->setRange(0, 100);
-    sliderSharpness->setValue(0);
-
-    sliderBlur = new QSlider(Qt::Horizontal, this);
-    sliderBlur->setRange(0, 100);
-    sliderBlur->setValue(0);
-
-    btnSave = new QPushButton("Save",this);
-    btnReset = new QPushButton("Reset",this);
-    btnExit = new QPushButton("Exit",this);
+    QString elementsStyle = R"(
    
+    QLabel 
+    {
+        color: #2D3436; 
+        font-size: 12px;
+        font-weight: bold; 
+    }
+    
+    QPushButton 
+    {
+        background-color: #FFFFFF;
+        border: 1px solid #DEE2E6;
+        border-radius: 12px;
+        padding: 8px 20px;
+        color: #2D3436;
+        font-weight: bold;
+    }
+
+    QPushButton:hover { background-color: #F1F2F6; }
+    QPushButton#btnSave { background-color: #2D3436; color: #FFFFFF; }
+    QPushButton#btnSave:hover { background-color: #000000; }
+
+    QSlider::groove:horizontal
+    {
+        border: 1px solid #DEE2E6;
+        height: 6px;
+        background: #F8F9FA;
+        border-radius: 3px;
+    }
+
+    QSlider::sub-page:horizontal 
+    {
+        background: #2D3436; 
+        border: 1px solid #2D3436;
+        height: 6px;
+        border-radius: 3px;
+    }
+
+ 
+    QSlider::add-page:horizontal 
+    {
+        background: #F1F2F6;
+        border: 1px solid #DEE2E6;
+        height: 6px;
+        border-radius: 3px;
+    }
+
+    QSlider::handle:horizontal 
+    {
+        background: #FFFFFF;
+        border: 2px solid #2D3436;
+        width: 14px;
+        height: 14px;
+        margin: -5px 0;
+        border-radius: 8px;
+    }
+
+    QSlider::handle:horizontal:hover
+    {
+        background: #F1F2F6;
+        transform: scale(1.1);
+    }
+
+    QPushButton#btnExit 
+    {
+        background-color: #FF7675;           
+        border: none;
+    }
+
+    QPushButton#btnExit:hover 
+    {
+        background-color: #D63031; 
+    }
+    )";
+
+    this->setStyleSheet(elementsStyle);
 }
-
-
 
 void Functional::applyGroupStyle(QGroupBox* group)
 {
     group->setStyleSheet(
         "QGroupBox {"
-        "   border: 2px solid #C2C2C2;"
-        "   border-radius: 8px;"
-        "   margin-top: 10px;"
-        "   background-color: #F0F0F0;"
+        "border: 1px solid #DEE2E6;"
+        "border-radius: 20px;"
+        "background-color: #FFFFFF;"
+        "margin-top: 5px;"
+        "color: #2D3436;"
+        "font-size: 12px;"
+        "font-weight: bold;"
+        "padding-top: 30px;"
         "}"
         "QGroupBox::title {"
-        "   subcontrol-origin: margin;"
-        "   subcontrol-position: top center;"
-        "   padding: 0 3px 0 3px;"
+        "subcontrol-origin: margin;"
+        "subcontrol-position: top center;"
+        "top: 15px;"
+        "color: #2D3436;" 
+        "font-weight: 800;"
+        "font-size: 13px;"
+        "text-transform: uppercase;"
+        "letter-spacing: 1px;"
         "}"
     );
 }
-
 QImage Functional::processImageStatic(QImage img, int sharp, int blur, int cV, int bV)
 {
     if (img.isNull()) return img;
