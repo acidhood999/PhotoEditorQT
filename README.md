@@ -4,7 +4,7 @@
 ![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-PhotoEditorQT is a high performance graphics editor based on C++ and the Qt 6 framework. The project focuses on efficient image processing using low level pixel manipulation techniques.
+PhotoEditorQT is graphics editor based on C++ and the Qt 6 framework. The project focuses on efficient image processing using low level pixel manipulation techniques.
 
 ---
 
