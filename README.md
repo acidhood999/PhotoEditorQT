@@ -48,4 +48,6 @@ Bash
 
 windeployqt.exe --release path/to/PhotoEditorQT.exe
 ```
+---
+*Created by [acidhood999](https://github.com/acidhood999)*
 ### [Download](https://github.com/acidhood999/PhotoEditorQT/releases/download/v1.0/PhotoEditor_v1.0_Win64.zip)
