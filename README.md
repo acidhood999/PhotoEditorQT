@@ -50,4 +50,4 @@ windeployqt.exe --release path/to/PhotoEditorQT.exe
 ```
 ---
 *Created by [acidhood999](https://github.com/acidhood999)*
-### [Download]([https://github.com/acidhood999/PhotoEditorQT/releases/download/v1.0/PhotoEditor_v1.0_Win64.zip](https://github.com/acidhood999/PhotoEditorQT/releases/download/v1.1/PhotoEditorQT_v1.1_Win64.rar))
+### [Download](https://github.com/acidhood999/PhotoEditorQT/releases/download/v1.1/PhotoEditorQT_v1.1_Win64.rar)
